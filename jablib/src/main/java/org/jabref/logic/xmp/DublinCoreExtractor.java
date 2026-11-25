@@ -17,6 +17,7 @@ import org.jabref.model.entry.Author;
 import org.jabref.model.entry.AuthorList;
 import org.jabref.model.entry.BibEntry;
 import org.jabref.model.entry.Date;
+import org.jabref.model.entry.KeywordList;
 import org.jabref.model.entry.Month;
 import org.jabref.model.entry.field.Field;
 import org.jabref.model.entry.field.FieldFactory;
@@ -304,10 +305,8 @@ public class DublinCoreExtractor {
 
     /// BibTeX: keywords; DC: 'dc:subject'
     private void fillKeywords(String value) {
-        String[] keywords = value.split(xmpPreferences.getKeywordSeparator().toString());
-        for (String keyword : keywords) {
-            dcSchema.addSubject(keyword.trim());
-        }
+        KeywordList.parseWithPrioritizedDelimiters(value, List.of(xmpPreferences.getKeywordSeparator(), ';', ','))
+                   .forEach(keyword -> dcSchema.addSubject(keyword.toString()));
     }
 
     /// BibTeX: title; DC: 'dc:title'
